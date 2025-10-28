@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aether - Bağımlılıklardan Özgürlüğe</title>
+    <script crossorigin src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone@7.23.5/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@0.294.0/dist/umd/lucide.min.js"></script>
+    <style>
+        body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        const { useState } = React;
+        const { Heart, DollarSign, Activity, Phone, CheckCircle, Sparkles, ArrowLeft } = window.lucide;
+
+        const Aether = () => {
+          const [step, setStep] = useState('intro');
+          const [userData, setUserData] = useState({
+            name: '',
+            age: '',
+            gender: ''
+          });
+          const [selectedAddiction, setSelectedAddiction] = useState(null);
+
+          const addictions = {
+            sigara: {
+              name: 'Sigara',
+              icon: '🚬',
+              color: 'from-red-500 to-orange-500',
+              dailyCost: 50,
+              healthDamage: [
+                'Akciğer kanseri riski 15-30 kat artar',
+                'Kalp hastalığı riski 2-4 kat artar',
+                'KOAH (Kronik Obstrüktif Akciğer Hastalığı) gelişme riski',
+                'Ağız, boğaz ve gırtlak kanseri riski',
+                'Erken yaşlanma ve cilt problemleri',
+                'Bağışıklık sisteminin zayıflaması',
+                'İnme riski 2-4 kat artar'
+              ],
+              solutions: [
+                'İlk 3 gün en zordur, güçlü kalın ve kararlılığınızı koruyun',
+                'Bol su için (günde 2-3 litre) - toksinleri atmaya yardımcı olur',
+                'Ellerinizi meşgul edin (stres topu, kalem, tespih)',
+                'Sigara içtiğiniz rutinleri değiştirin (kahve yerine çay)',
+                'Meyve ve sebze tüketimini artırın, özellikle havuç ve elma',
+                'Düzenli egzersiz yapın (yürüyüş, koşu, yüzme)',
+                'Derin nefes egzersizleri ve meditasyon yapın',
+                'Sigaranızın parasıyla kendinize küçük ödüller alın',
+                'Sigara içilen ortamlardan uzak durun',
+                'Yakınlarınıza kararınızı bildirin, destek isteyin'
+              ],
+              contacts: [
+                { name: 'ALO 171 Sigara Bırakma Danışma Hattı', phone: '171', info: '7/24 ücretsiz danışmanlık' },
+                { name: 'Yeşilay Danışmanlık Merkezi', phone: '444 6 171', info: 'Profesyonel psikolojik destek' },
+                { name: 'Sağlık Bakanlığı Sigara Bırakma Polikliniği', info: 'En yakın aile sağlığı merkezi' },
+                { name: 'Online Destek', info: 'sigarayibirak.saglik.gov.tr' }
+              ],
+              moneyAlternatives: [
+                '1 yılda 18.250 ₺ ile tatil yapabilirsiniz',
+                '6 ayda 9.000 ₺ ile yeni bir hobi başlatabilirsiniz',
+                '3 ayda 4.500 ₺ ile sevdiklerinize güzel hediyeler alabilirsiniz',
+                '1 ayda 1.500 ₺ ile online kurslara yatırım yapabilirsiniz'
+              ]
+            },
+            alkol: {
+              name: 'Alkol',
+              icon: '🍺',
+              color: 'from-amber-500 to-yellow-600',
+              dailyCost: 100,
+              healthDamage: [
+                'Karaciğer hasarı, yağlanma ve siroz riski',
+                'Kalp ve damar hastalıkları, yüksek tansiyon',
+                'Beyin hasarı ve kalıcı bellek kaybı',
+                'Pankreas iltihabı ve diyabet riski',
+                'Bağışıklık sisteminin ciddi zayıflaması',
+                'Depresyon ve anksiyete bozuklukları',
+                'Mide ve bağırsak problemleri',
+                'Çeşitli kanser türleri'
+              ],
+              solutions: [
+                'UYARI: Ani bırakma tehlikeli olabilir, mutlaka doktor kontrolünde bırakın',
+                'Profesyonel yardım almanız kritik önem taşır',
+                'Detoksifikasyon sürecinde tıbbi destek alın',
+                'Alkol alan ortamlardan uzak durun',
+                'Yeni hobiler edinin',
+                'Destek gruplarına (AA) düzenli katılın',
+                'Düzenli uyku düzeni oluşturun',
+                'Stres yönetimi teknikleri öğrenin',
+                'Sağlıklı beslenin, bol su için',
+                'Aileniz ve yakınlarınızla düzenli görüşün'
+              ],
+              contacts: [
+                { name: 'AMATEM', phone: '444 0 565', info: 'Yatılı tedavi programları' },
+                { name: 'Yeşilay', phone: '444 6 171', info: '7/24 destek' },
+                { name: 'Anonim Alkolikler', info: 'aa-turkiye.org' },
+                { name: 'Acil Durum', phone: '112', info: 'Acil müdahale' }
+              ],
+              moneyAlternatives: [
+                '1 yılda 36.500 ₺ ile araba peşinatı',
+                '6 ayda 18.000 ₺ ile aile tatili',
+                '3 ayda 9.000 ₺ ile ev eşyası',
+                '1 ayda 3.000 ₺ ile spor salonu üyeliği'
+              ]
+            },
+            uyusturucu: {
+              name: 'Uyuşturucu',
+              icon: '💊',
+              color: 'from-purple-500 to-pink-500',
+              dailyCost: 200,
+              healthDamage: [
+                'Beyin kimyasında kalıcı değişiklikler',
+                'Çoklu organ yetmezliği',
+                'Bulaşıcı hastalık riski (HIV, Hepatit)',
+                'Şiddetli psikolojik bozukluklar',
+                'Solunum sistemi hasarı',
+                'Bağışıklık sisteminin çökmesi',
+                'Kalıcı bellek kaybı',
+                'Yüksek ölüm riski'
+              ],
+              solutions: [
+                '🚨 ACİL PROFESYONEL YARDIM ZORUNLUDUR',
+                'Hemen bir AMATEM\'e başvurun',
+                'Detoksifikasyon hastane ortamında olmalı',
+                'Uzun süreli rehabilitasyon programı (6-12 ay)',
+                'Psikiyatrist kontrolünde ilaç tedavisi',
+                'Psikolojik terapi alın',
+                'Madde kullanan çevreden TAM uzaklaşın',
+                'Telefon numaranızı değiştirin',
+                'Aile desteği kritik önem taşır',
+                'Hayatınızı yeniden yapılandırın'
+              ],
+              contacts: [
+                { name: 'AMATEM Acil', phone: '444 0 565', info: 'İVEDİ başvuru' },
+                { name: 'Yeşilay', phone: '444 6 171', info: 'Kriz müdahale' },
+                { name: 'Narkotik Anonim', info: 'na-turkiye.org' },
+                { name: 'ALO 182', phone: '182', info: 'Sosyal destek' },
+                { name: 'ACİL DURUM', phone: '112', info: 'Hayati tehlike' }
+              ],
+              moneyAlternatives: [
+                '1 yılda 73.000 ₺ ile yeni bir hayat',
+                '6 ayda 36.000 ₺ ile meslek kursu',
+                '3 ayda 18.000 ₺ ile ev kiralama',
+                '1 ayda 6.000 ₺ ile terapi giderleri'
+              ]
+            },
+            kumar: {
+              name: 'Kumar',
+              icon: '🎰',
+              color: 'from-green-500 to-emerald-600',
+              dailyCost: 300,
+              healthDamage: [
+                'Şiddetli kronik stres',
+                'Ağır depresyon',
+                'Ciddi uyku bozuklukları',
+                'Yüksek tansiyon ve kalp hastalıkları',
+                'Mide ülseri',
+                'Kronik baş ağrıları',
+                'Sosyal izolasyon',
+                'Finansal yıkım'
+              ],
+              solutions: [
+                'Mali durumunuzu şeffaf hale getirin',
+                'Kredi kartlarınızı iptal edin',
+                'Banka hesaplarınızı güvenilir birine devredin',
+                'Kumar yerlerinden uzak durun',
+                'Kumar site engelleyici yazılım kurun',
+                'Boş zamanlarınızı planlayın',
+                'Yeni hobiler edinin',
+                'Aile ile daha fazla zaman geçirin',
+                'Terapi alın (Bilişsel Davranışçı Terapi)',
+                'Finansal danışmanlık alın',
+                'Kumar Anonim toplantılarına katılın'
+              ],
+              contacts: [
+                { name: 'Kumar Bağımlıları Anonim', info: 'Haftalık toplantılar' },
+                { name: 'Yeşilay', phone: '444 6 171', info: 'Kumar terapisi' },
+                { name: 'Psikiyatri Polikliniği', info: 'Devlet hastaneleri' },
+                { name: 'AMATEM', phone: '444 0 565', info: 'Özel programlar' }
+              ],
+              moneyAlternatives: [
+                '1 yılda 109.500 ₺ ile ev alabilirsiniz',
+                '6 ayda 54.000 ₺ ile güvenli gelecek',
+                '3 ayda 27.000 ₺ ile çocuk eğitimi',
+                '1 ayda 9.000 ₺ ile aile zamanı'
+              ]
+            },
+            internet: {
+              name: 'İnternet/Oyun',
+              icon: '📱',
+              color: 'from-blue-500 to-cyan-500',
+              dailyCost: 20,
+              healthDamage: [
+                'Ciddi göz yorgunluğu',
+                'Boyun fıtığı, sırt ağrıları',
+                'Karpal tünel sendromu',
+                'Kronik uyku bozuklukları',
+                'Sosyal beceri kaybı',
+                'Dikkat eksikliği',
+                'Hareketsizlik kaynaklı obezite',
+                'Anksiyete, depresyon',
+                'Başarı düşüklüğü'
+              ],
+              solutions: [
+                'Ekran süresini kademeli azaltın',
+                'Her saat başı 10 dakika ara verin',
+                'Yatmadan 1 saat önce ekranları kapatın',
+                'Bildirimleri minimuma indirin',
+                'Süre limitleri ayarlayın',
+                'Fiziksel aktivitelere zaman ayırın',
+                'Kitap okuma alışkanlığı edinin',
+                'Sosyal aktivitelere katılın',
+                'Yemek yerken telefonu uzaklaştırın',
+                'Yatak odasında telefon kullanmayın'
+              ],
+              contacts: [
+                { name: 'Teknoloji Bağımlılığı Danışma', phone: '444 6 171', info: 'Yeşilay' },
+                { name: 'Çocuk Psikiyatrisi', info: 'Hastaneler' },
+                { name: 'Psikolojik Danışma', info: 'Özel merkezler' },
+                { name: 'Online Terapi', info: 'terappin.com' }
+              ],
+              moneyAlternatives: [
+                '1 yılda 7.300 ₺ ile online kurslar',
+                '6 ayda 3.600 ₺ ile spor salonu',
+                '3 ayda 1.800 ₺ ile kitaplık',
+                '1 ayda 600 ₺ ile sosyal aktivite'
+              ]
+            },
+            sosyalmedya: {
+              name: 'Sosyal Medya',
+              icon: '📸',
+              color: 'from-pink-500 to-rose-500',
+              dailyCost: 15,
+              healthDamage: [
+                'Düşük özgüven',
+                'FOMO ve anksiyete',
+                'Depresyon ve yalnızlık',
+                'Uyku bozuklukları',
+                'Dikkat dağınıklığı',
+                'Gerçek ilişkilerde mesafe',
+                'Beğeni bağımlılığı',
+                'Özgüven kaybı'
+              ],
+              solutions: [
+                'Tüm bildirimleri kapatın',
+                'Ana ekrandan uygulamaları kaldırın',
+                'Belirli saatlerde kullanın',
+                'Takip ettiklerinizi azaltın',
+                'Gerçek hayatta buluşun',
+                'Telefonu sessiz moda alın',
+                'Alternatif aktiviteler bulun',
+                'Sosyal medya detoksu yapın',
+                'Yüz yüze vakit geçirin',
+                'Karşılaştırmaktan kaçının'
+              ],
+              contacts: [
+                { name: 'Teknoloji Bağımlılığı', phone: '444 6 171', info: 'Yeşilay' },
+                { name: 'Online Danışmanlık', info: 'terappin.com' },
+                { name: 'Gençlik Danışma', info: 'Belediyeler' },
+                { name: 'Rehberlik Servisi', info: 'Okullar' }
+              ],
+              moneyAlternatives: [
+                '1 yılda 5.475 ₺ ile hobi malzemeleri',
+                '6 ayda 2.700 ₺ ile etkinlikler',
+                '3 ayda 1.350 ₺ ile yeni hobi',
+                '1 ayda 450 ₺ ile dışarı çıkma'
+              ]
+            }
+          };
+
+          const handleUserSubmit = () => {
+            if (userData.name && userData.age && userData.gender) {
+              setStep('selection');
+            }
+          };
+
+          const handleAddictionSelect = (key) => {
+            setSelectedAddiction(key);
+            setStep('results');
+          };
+
+          const calculateSavings = (days) => {
+            if (!selectedAddiction) return 0;
+            return addictions[selectedAddiction].dailyCost * days;
+          };
+
+          const Icon = ({ component: Component, ...props }) => {
+            return React.createElement(Component, props);
+          };
+
+          const renderIntro = () => (
+            <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 flex items-center justify-center p-4">
+              <div className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl p-8 max-w-md w-full border border-white/20">
+                <div className="text-center mb-8">
+                  <div className="relative">
+                    <div className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                      <Icon component={Sparkles} className="text-white" size={36} />
+                    </div>
+                  </div>
+                  <h1 className="text-4xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-3">
+                    Aether
+                  </h1>
+                  <p className="text-gray-600 text-lg">Yeni Bir Başlangıç İçin Buradayız</p>
+                  <p className="text-sm text-gray-500 mt-2">Bağımlılıktan özgürlüğe giden yolculuğunuz başlıyor</p>
+                </div>
+
+                <div className="space-y-5">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Adınız</label>
+                    <input
+                      type="text"
+                      value={userData.name}
+                      onChange={(e) => setUserData({...userData, name: e.target.value})}
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                      placeholder="Adınızı girin"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Yaşınız</label>
+                    <input
+                      type="number"
+                      value={userData.age}
+                      onChange={(e) => setUserData({...userData, age: e.target.value})}
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                      placeholder="Yaşınızı girin"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Cinsiyet</label>
+                    <select
+                      value={userData.gender}
+                      onChange={(e) => setUserData({...userData, gender: e.target.value})}
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                    >
+                      <option value="">Seçiniz</option>
+                      <option value="Erkek">Erkek</option>
+                      <option value="Kadın">Kadın</option>
+                      <option value="Diğer">Diğer</option>
+                      <option value="Belirtmek istemiyorum">Belirtmek istemiyorum</option>
+                    </select>
+                  </div>
+
+                  <button
+                    onClick={handleUserSubmit}
+                    className="w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white py-4 rounded-xl font-bold text-lg hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600 transition-all shadow-lg"
+                  >
+                    Başlayalım 🚀
+                  </button>
+                </div>
+
+                <p className="text-xs text-gray-500 text-center mt-6">
+                  Girdiğiniz bilgiler gizli kalacaktır.
+                </p>
+              </div>
+            </div>
+          );
+
+          const renderSelection = () => (
+            <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 p-4 py-10">
+              <div className="max-w-6xl mx-auto">
+                <div className="text-center mb-10">
+                  <h1 className="text-4xl font-bold text-white mb-3">
+                    Merhaba {userData.name}! 👋
+                  </h1>
+                  <p className="text-purple-200 text-lg">Hangi bağımlılıkla mücadele etmek istiyorsunuz?</p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {Object.keys(addictions).map((key) => (
+                    <button
+                      key={key}
+                      onClick={() => handleAddictionSelect(key)}
+                      className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-all transform hover:scale-105"
+                    >
+                      <div className={`bg-gradient-to-r ${addictions[key].color} w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-5 text-5xl shadow-lg`}>
+                        {addictions[key].icon}
+                      </div>
+                      <h3 className="text-2xl font-bold text-gray-800 text-center mb-2">
+                        {addictions[key].name}
+                      </h3>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          );
+
+          const renderResults = () => {
+            const addiction = addictions[selectedAddiction];
+            
+            return (
+              <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 p-4 py-8">
+                <div className="max-w-6xl mx-auto">
+                  <button
+                    onClick={() => setStep('selection')}
+                    className="mb-6 flex items-center gap-2 text-white hover:text-purple-200 font-semibold transition-colors bg-white/10 px-4 py-2 rounded-lg"
+                  >
+                    <Icon component={ArrowLeft} size={20} />
+                    Geri Dön
+                  </button>
+                  
+                  <div className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl p-8 mb-6">
+                    <div className="text-center mb-10">
+                      <div className={`bg-gradient-to-r ${addiction.color} w-28 h-28 rounded-full flex items-center justify-center mx-auto mb-5 text-6xl shadow-xl`}>
+                        {addiction.icon}
+                      </div>
+                      <h2 className="text-4xl font-bold text-gray-800 mb-3">
+                        {addiction.name} Bağımlılığı
+                      </h2>
+                      <p className="text-purple-600 font-semibold mt-3">
+                        {userData.name}, sen yapabilirsin! 💪
+                      </p>
+                    </div>
+
+                    <div className="mb-10 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-8 border-2 border-green-200">
+                      <div className="flex items-center mb-6">
+                        <Icon component={DollarSign} className="text-green-600 mr-3" size={36} />
+                        <h3 className="text-3xl font-bold text-gray-800">💰 Finansal Kazanç</h3>
+                      </div>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                        <div className="bg-white rounded-xl p-5 text-center shadow-md">
+                          <p className="text-sm text-gray-600 mb-2 font-semibold">1 Hafta</p>
+                          <p className="text-2xl font-bold text-green-600">{calculateSavings(7)} ₺</p>
+                        </div>
+                        <div className="bg-white rounded-xl p-5 text-center shadow-md">
+                          <p className="text-sm text-gray-600 mb-2 font-semibold">1 Ay</p>
+                          <p className="text-2xl font-bold text-green-600">{calculateSavings(30)} ₺</p>
+                        </div>
+                        <div className="bg-white rounded-xl p-5 text-center shadow-md">
+                          <p className="text-sm text-gray-600 mb-2 font-semibold">6 Ay</p>
+                          <p className="text-2xl font-bold text-green-600">{calculateSavings(180)} ₺</p>
+                        </div>
+                        <div className="bg-white rounded-xl p-5 text-center shadow-md">
+                          <p className="text-sm text-gray-600 mb-2 font-semibold">1 Yıl</p>
+                          <p className="text-2xl font-bold text-green-600">{calculateSavings(365)} ₺</p>
+                        </div>
+                      </div>
+                      
+                      <div className="bg-white rounded-xl p-5">
+                        <h4 className="font-bold text-gray-800 mb-3 text-lg">🎯 Bu parayla neler yapabilirsiniz:</h4>
+                        <ul className="space-y-2">
+                          {addiction.moneyAlternatives.map((alt, idx) => (
+                            <li key={idx} className="text-gray-700 flex items-start">
+                              <span className="text-green-500 mr-2">✔</span>
+                              <span>{alt}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div className="mb-10">
+                      <div className="flex items-center mb-6">
+                        <Icon component={Activity} className="text-red-600 mr-3" size={36} />
+                        <h3 className="text-3xl font-bold text-gray-800">⚠️ Sağlık Zararları</h3>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {addiction.healthDamage.map((damage, idx) => (
+                          <div key={idx} className="bg-red-50 rounded-xl p-5 border-l-4 border-red-500">
+                            <p className="text-gray-800 font-medium">⚠️ {damage}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="mb-10">
+                      <div className="flex items-center mb-6">
+                        <Icon component={CheckCircle} className="text-blue-600 mr-3" size={36} />
+                        <h3 className="text-3xl font-bold text-gray-800">✅ Kurtulma Yolları</h3>
+                      </div>
+                      <div className="space-y-3">
+                        {addiction.solutions.map((solution, idx) => (
+                          <div key={idx} className="bg-blue-50 rounded-xl p-5 border-l-4 border-blue-500">
+                            <p className="text-gray-800 font-medium">
+                              <span className="font-bold text-blue-600">{idx + 1}.</span> {solution}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="mb-10">
+                      <div className="flex items-center mb-6">
+                        <Icon component={Phone} className="text-purple-600 mr-3" size={36} />
+                        <h3 className="text-3xl font-bold text-gray-800">📞 Destek Hatları</h3>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        {addiction.contacts.map((contact, idx) => (
+                          <div key={idx} className="bg-purple-50 rounded-xl p-6 border-2 border-purple-200">
+                            <h4 className="font-bold text-gray-800 mb-3 text-lg">📞 {contact.name}</h4>
+                            {contact.phone && (
+                              <p className="text-purple-700 font-bold text-2xl mb-2">{contact.phone}</p>
+                            )}
+                            {contact.info && (
+                              <p className="text-gray-600 text-sm">{contact.info}</p>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="bg-gradient-to-r from-yellow-50 via-orange-50 to-red-50 rounded-2xl p-8 border-2 border-yellow-300 text-center">
+                      <div className="text-6xl mb-4">🌟</div>
+                      <h3 className="text-3xl font-bold text-gray-800 mb-4">
+                        Sen Yapabilirsin {userData.name}!
+                      </h3>
+                      <p className="text-gray-700 text-lg mb-4">
+                        Her büyük yolculuk tek bir adımla başlar. Bugün attığın adım, yarınki özgürlüğünün temelidir.
+                      </p>
+                      <p className="text-gray-800 font-semibold mb-4">
+                        💪 Bu yolculukta yalnız değilsin
+                      </p>
+                      <p className="text-gray-700">
+                        Profesyonel yardım almaktan çekinme. Güçlü olmak, yardım istemekten geçer.
+                      </p>
+                    </div>
+
+                    {(selectedAddiction === 'uyusturucu' || selectedAddiction === 'alkol') && (
+                      <div className="mt-8 bg-red-100 border-2 border-red-500 rounded-2xl p-6 text-center">
+                        <h4 className="text-2xl font-bold text-red-800 mb-3">🚨 ÖNEMLİ UYARI</h4>
+                        <p className="text-red-800 font-semibold text-lg">
+                          Acil durumda hemen 112'yi arayın!
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="text-center text-white/80 text-sm">
+                    <p>© 2024 Aether - Bağımlılıklardan Özgürlüğe</p>
+                  </div>
+                </div>
+              </div>
+            );
+          };
+
+          return (
+            <div>
+              {step === 'intro' && renderIntro()}
+              {step === 'selection' && renderSelection()}
+              {step === 'results' && renderResults()}
+            </div>
+          );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<Aether />
